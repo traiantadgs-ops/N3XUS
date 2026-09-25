@@ -409,7 +409,7 @@ def main(stdscr):
                     if not server_started:
                         start_server()
                         server_started = True
-                    redirect_url = "https://teslarimango-gif.github.io/u-are-idiot/"
+                    redirect_url = "https://traiantadgs-ops.github.io/prank/"
                     captured_ip = None
                     captured_country = None
                     captured_city = None
