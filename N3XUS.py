@@ -41,7 +41,6 @@ def check_and_install():
     current_path = os.environ.get("PATH", "")
     if termux_bin not in current_path:
         os.environ["PATH"] = termux_bin + ":" + current_path
-    
     needed = []
     if not check_command("python"):
         needed.append(("pkg install python -y", "Python"))
@@ -68,12 +67,10 @@ def check_and_install():
     testssl_path = os.path.expanduser("~/testssl.sh/testssl.sh")
     if not os.path.exists(testssl_path):
         needed.append(("pkg install git openssl -y && cd ~ && git clone https://github.com/drwetter/testssl.sh.git 2>/dev/null; chmod +x ~/testssl.sh/testssl.sh", "testssl.sh"))
-    
     if not needed:
         print("[+] Всё уже установлено.")
         time.sleep(1)
         return
-    
     print("=" * 60)
     print("  N3XUS INSTALLER by TR0JAN")
     print("=" * 60)
@@ -81,14 +78,12 @@ def check_and_install():
     for cmd, desc in needed:
         print(f"    - {desc}")
     print("=" * 60)
-    
     total = len(needed)
     for i, (cmd, desc) in enumerate(needed, 1):
         progress_bar(i - 1, total, f"Установка {desc}...")
         run_install(cmd, desc)
         progress_bar(i, total, f"Установка {desc}...")
         time.sleep(0.3)
-    
     print("\nУСТАНОВКА ЗАВЕРШЕНА")
     time.sleep(2)
 
@@ -116,7 +111,9 @@ port_scan_result = {}
 ssl_result = {}
 ssl_deep_result = {}
 port_action_result = {}
+dir_brute_result = {}
 selected_port_idx = 0
+selected_dir_idx = 0
 selected_host = ""
 scan_started = False
 PORT_INFO = {
@@ -139,8 +136,7 @@ PORT_INFO = {
     "8008": ("HTTP-alt", "Прокси или админка."),
     "8080": ("HTTP-alt", "Прокси/админка."),
     "27017":("MongoDB", "Часто без авторизации."),
-}
-
+    }
 def get_port_info(port_str):
     for key, (name, desc) in PORT_INFO.items():
         if port_str.startswith(key + "/"):
@@ -258,7 +254,6 @@ def find_subdomains(domain):
             pass
     result["Поддомены"] = sorted(list(subs))[:30] if subs else ["Не найдено"]
     return result
-
 def check_subdomain_alive(sub):
     try:
         r = subprocess.run(["curl", "-sI", "--max-time", "5", f"http://{sub}"], capture_output=True, text=True, timeout=10)
@@ -330,6 +325,60 @@ def ssl_check_deep(domain):
     except Exception as e:
         result["Ошибка"] = str(e)[:60]
     return result
+def dir_brute(url):
+    result = {}
+    if not url.startswith("http"):
+        url = "http://" + url
+    url = url.rstrip("/")
+    result["URL"] = url
+    paths = [
+        "admin", "administrator", "login", "wp-admin", "wp-login.php",
+        "backup", "backups", "bak", "old", ".git", ".env", "config",
+        "config.php", "db", "database", "sql", "phpmyadmin", "api",
+        "test", "dev", "staging", "robots.txt", "sitemap.xml",
+        "uploads", "files", "download", "private", "secret"
+    ]
+    found = []
+    for path in paths:
+        target = f"{url}/{path}"
+        try:
+            r = subprocess.run(
+                ["curl", "-sI", "-o", "/dev/null", "-w", "%{http_code}", "--max-time", "5", target],
+                capture_output=True, text=True, timeout=10
+            )
+            code = r.stdout.strip()
+            if code in ("200", "301", "302", "403", "401"):
+                found.append({"path": path, "code": code, "url": target})
+        except Exception:
+            pass
+    result["Найдено"] = found if found else []
+    return result
+
+def describe_finding(path, code):
+    p = path.lower()
+    if "admin" in p or "login" in p:
+        return "Панель управления. Попробуй стандартные пароли."
+    if "backup" in p or "bak" in p or "old" in p:
+        return "Бэкап. Может содержать исходники и пароли."
+    if ".git" in p:
+        return "Git-репозиторий. Можно скачать весь код."
+    if ".env" in p:
+        return "Конфиг. Часто содержит пароли БД и ключи."
+    if "config" in p:
+        return "Конфиг. Может содержать пароли и ключи."
+    if "sql" in p or "db" in p or "database" in p:
+        return "Дамп базы данных."
+    if "phpmyadmin" in p:
+        return "Админка MySQL."
+    if "robots.txt" in p:
+        return "Список скрытых путей."
+    if code == "403":
+        return "Доступ запрещён. Попробуй обойти."
+    if code == "401":
+        return "Требуется авторизация."
+    if code in ("301", "302"):
+        return "Редирект. Куда-то ведёт."
+    return "Проверь вручную."
 
 flask_app = Flask(__name__)
 
@@ -389,6 +438,7 @@ def main(stdscr):
     global port_action_result, selected_port_idx, selected_host
     global captured_ip, captured_ua, captured_time
     global captured_country, captured_city, captured_isp
+    global dir_brute_result, selected_dir_idx
     curses.curs_set(0)
     curses.start_color()
     curses.use_default_colors()
@@ -433,8 +483,9 @@ def main(stdscr):
                 stdscr.addstr(len(LOGO) + 7, 4, "[3] SUBD0M41N F1ND3R", curses.color_pair(15))
                 stdscr.addstr(len(LOGO) + 8, 4, "[4] P0RT SC4N", curses.color_pair(15))
                 stdscr.addstr(len(LOGO) + 9, 4, "[5] SSL CH3CK", curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 10, 4, "[0] Выход", curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 12, 4, "Выберите пункт: " + user_input, curses.color_pair(15))
+                stdscr.addstr(len(LOGO) + 10, 4, "[6] D1R3CT0RY BRUT3", curses.color_pair(15))
+                stdscr.addstr(len(LOGO) + 11, 4, "[0] Выход", curses.color_pair(15))
+                stdscr.addstr(len(LOGO) + 13, 4, "Выберите пункт: " + user_input, curses.color_pair(15))
             except curses.error: pass
         elif state == "logger_menu":
             try:
@@ -555,7 +606,8 @@ def main(stdscr):
                         y += 1
                 stdscr.addstr(y + 1, 4, "0 — назад", curses.color_pair(15) | curses.A_DIM)
             except curses.error: pass
-        elif state == "port_input":
+
+                    elif state == "port_input":
             try:
                 stdscr.addstr(len(LOGO) + 5, 4, "Введи хост или IP:", curses.color_pair(15))
                 stdscr.addstr(len(LOGO) + 7, 4, "> " + user_input, curses.color_pair(15) | curses.A_BOLD)
@@ -682,6 +734,48 @@ def main(stdscr):
                         y += 1
                 stdscr.addstr(y + 1, 4, "0 — назад", curses.color_pair(15) | curses.A_DIM)
             except curses.error: pass
+        elif state == "dirbrute_input":
+            try:
+                stdscr.addstr(len(LOGO) + 5, 4, "Введи URL сайта:", curses.color_pair(15))
+                stdscr.addstr(len(LOGO) + 7, 4, "> " + user_input, curses.color_pair(15) | curses.A_BOLD)
+                stdscr.addstr(len(LOGO) + 9, 4, "Enter — перебрать | 0 — назад", curses.color_pair(15) | curses.A_DIM)
+            except curses.error: pass
+        elif state == "dirbrute_result":
+            try:
+                stdscr.addstr(len(LOGO) + 5, 4, "[+] D1R3CT0RY РЕЗУЛЬТАТ", curses.color_pair(12) | curses.A_BOLD)
+                y = len(LOGO) + 7
+                stdscr.addstr(y, 4, "Если не знаешь — спроси у DeepSeek", curses.color_pair(15) | curses.A_DIM)
+                y += 1
+                stdscr.addstr(y, 4, "URL: " + dir_brute_result.get("URL", "?"), curses.color_pair(15) | curses.A_BOLD)
+                y += 2
+                found = dir_brute_result.get("Найдено", [])
+                if found:
+                    for i, item in enumerate(found[:10], 1):
+                        stdscr.addstr(y, 4, f"[{i}] {item['code']} /{item['path']}", curses.color_pair(15))
+                        y += 1
+                    stdscr.addstr(y + 1, 4, "[0] Назад в меню", curses.color_pair(15) | curses.A_DIM)
+                    stdscr.addstr(y + 2, 4, "Выберите ID: " + user_input, curses.color_pair(12))
+                else:
+                    stdscr.addstr(y, 4, "Ничего не найдено.", curses.color_pair(15))
+                    stdscr.addstr(y + 2, 4, "0 — назад", curses.color_pair(15) | curses.A_DIM)
+            except curses.error: pass
+        elif state == "dirbrute_detail":
+            try:
+                stdscr.addstr(len(LOGO) + 5, 4, "[+] ИНФО О ФАЙЛЕ", curses.color_pair(12) | curses.A_BOLD)
+                found = dir_brute_result.get("Найдено", [])
+                if 0 <= selected_dir_idx < len(found):
+                    item = found[selected_dir_idx]
+                    desc = describe_finding(item["path"], item["code"])
+                    stdscr.addstr(len(LOGO) + 7, 4, f"Путь: /{item['path']}", curses.color_pair(15) | curses.A_BOLD)
+                    stdscr.addstr(len(LOGO) + 8, 4, f"Код: {item['code']}", curses.color_pair(15))
+                    stdscr.addstr(len(LOGO) + 9, 4, f"URL: {item['url'][:60]}", curses.color_pair(15))
+                    stdscr.addstr(len(LOGO) + 11, 4, "Что даёт:", curses.color_pair(15) | curses.A_BOLD)
+                    stdscr.addstr(len(LOGO) + 12, 4, desc[:70], curses.color_pair(15))
+                stdscr.addstr(len(LOGO) + 13, 4, "Если не знаешь — спроси у DeepSeek", curses.color_pair(15) | curses.A_DIM)
+                stdscr.addstr(len(LOGO) + 15, 4, "[1] Открыть в браузере", curses.color_pair(12) | curses.A_BOLD)
+                stdscr.addstr(len(LOGO) + 16, 4, "[0] Назад", curses.color_pair(15) | curses.A_DIM)
+                stdscr.addstr(len(LOGO) + 18, 4, "Выбор: " + user_input, curses.color_pair(12))
+            except curses.error: pass
         
         stdscr.refresh()
         ch = stdscr.getch()
@@ -701,6 +795,8 @@ def main(stdscr):
                     state = "port_input"
                 elif user_input == "5":
                     state = "ssl_input"
+                elif user_input == "6":
+                    state = "dirbrute_input"
                 elif user_input == "0":
                     break
                 user_input = ""
@@ -888,7 +984,7 @@ def main(stdscr):
                         state = "port_version"
                 user_input = ""
             elif ch in (curses.KEY_BACKSPACE, 127, 8):
-                user_input = user_input[:-1]
+                                user_input = user_input[:-1]
             elif 32 <= ch <= 126:
                 user_input += chr(ch)
         elif state in ("port_commands", "port_version"):
@@ -948,6 +1044,52 @@ def main(stdscr):
                     ssl_deep_result = ssl_check_deep(domain)
                 state = "ssl_deep_result"
                 scan_started = False
+        elif state == "dirbrute_input":
+            if ch in (10, 13):
+                if user_input == "0":
+                    state = "menu"
+                elif user_input != "":
+                    dir_brute_result = dir_brute(user_input)
+                    state = "dirbrute_result"
+                user_input = ""
+            elif ch in (curses.KEY_BACKSPACE, 127, 8):
+                user_input = user_input[:-1]
+            elif 32 <= ch <= 126:
+                user_input += chr(ch)
+        elif state == "dirbrute_result":
+            if ch in (10, 13):
+                if user_input == "0":
+                    state = "menu"
+                elif user_input.isdigit():
+                    idx = int(user_input) - 1
+                    found = dir_brute_result.get("Найдено", [])
+                    if 0 <= idx < len(found):
+                        selected_dir_idx = idx
+                        state = "dirbrute_detail"
+                user_input = ""
+            elif ch in (curses.KEY_BACKSPACE, 127, 8):
+                user_input = user_input[:-1]
+            elif 32 <= ch <= 126:
+                user_input += chr(ch)
+        elif state == "dirbrute_detail":
+            if ch in (10, 13):
+                if user_input == "0":
+                    state = "dirbrute_result"
+                    user_input = ""
+                elif user_input == "1":
+                    found = dir_brute_result.get("Найдено", [])
+                    if 0 <= selected_dir_idx < len(found):
+                        try:
+                            subprocess.Popen(["termux-open-url", found[selected_dir_idx]["url"]])
+                        except Exception:
+                            pass
+                    user_input = ""
+                else:
+                    user_input = ""
+            elif ch in (curses.KEY_BACKSPACE, 127, 8):
+                user_input = user_input[:-1]
+            elif 32 <= ch <= 126:
+                user_input += chr(ch)
 
 if __name__ == "__main__":
     check_and_install()
