@@ -44,9 +44,9 @@
 
 Одна команда в Termux:
 
-\`\`\`bash
+```bash
 bash <(curl -sSL https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/install.sh)
-\`\`\`
+```
 
 ## Требования
 
