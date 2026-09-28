@@ -2,7 +2,7 @@
 set -e
 
 echo "════════════════════════════════════════════════════════════"
-echo "  N3XUS v2.0 — установщик"
+echo "  N3XUS v2.1 — установщик"
 echo "  TG: @N3XUS_LIKER"
 echo "════════════════════════════════════════════════════════════"
 echo ""
@@ -17,6 +17,9 @@ pkg update -y && pkg upgrade -y
 
 echo "[*] Установка базовых зависимостей..."
 pkg install python git curl nmap sslscan termux-api -y
+
+echo "[*] Установка Go (для subfinder и amass)..."
+pkg install golang -y
 
 echo "[*] Установка Flask..."
 pip install --break-system-packages flask 2>/dev/null || pkg install python-flask -y
@@ -40,12 +43,32 @@ fi
 echo "[*] Установка cloudflared..."
 pkg install cloudflared -y 2>/dev/null || true
 
+echo "[*] Установка subfinder..."
+if ! command -v subfinder >/dev/null 2>&1; then
+    go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+fi
+
+echo "[*] Установка amass..."
+if ! command -v amass >/dev/null 2>&1; then
+    go install -v github.com/owasp-amass/amass/v4/...@latest
+fi
+
+echo "[*] Настройка PATH для Go-бинарников..."
+if ! grep -q 'go/bin' ~/.bashrc 2>/dev/null; then
+    echo 'export PATH=$PATH:$HOME/go/bin' >> ~/.bashrc
+fi
+export PATH=$PATH:$HOME/go/bin
+
 echo "[*] Скачивание N3XUS.py..."
 cd ~
 curl -fsSL -o N3XUS.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/N3XUS.py
 
 echo ""
 echo "[+] Установка завершена!"
+echo "[+] Проверка инструментов:"
+echo "    subfinder: $(command -v subfinder || echo 'нет')"
+echo "    amass:     $(command -v amass || echo 'нет')"
+echo ""
 echo "[+] Запуск N3XUS..."
 echo ""
 sleep 2
