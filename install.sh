@@ -16,7 +16,7 @@ echo "[*] Обновление пакетов..."
 pkg update -y && pkg upgrade -y
 
 echo "[*] Установка базовых зависимостей..."
-pkg install python git curl nmap sslscan termux-api -y
+pkg install python git curl nmap sslscan termux-api clang make -y
 
 echo "[*] Установка Go (для subfinder и amass)..."
 pkg install golang -y
@@ -43,6 +43,22 @@ fi
 echo "[*] Установка cloudflared..."
 pkg install cloudflared -y 2>/dev/null || true
 
+echo "[*] Установка masscan (сборка из исходников)..."
+if ! command -v masscan >/dev/null 2>&1; then
+    cd ~
+    if [ ! -d ~/masscan ]; then
+        git clone https://github.com/robertdavidgraham/masscan.git 2>/dev/null || true
+    fi
+    if [ -d ~/masscan ]; then
+        cd ~/masscan
+        make 2>/dev/null || true
+        if [ -f ~/masscan/bin/masscan ]; then
+            cp ~/masscan/bin/masscan $PREFIX/bin/masscan
+            chmod +x $PREFIX/bin/masscan
+        fi
+    fi
+fi
+
 echo "[*] Установка subfinder..."
 if ! command -v subfinder >/dev/null 2>&1; then
     go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
@@ -68,6 +84,10 @@ echo "[+] Установка завершена!"
 echo "[+] Проверка инструментов:"
 echo "    subfinder: $(command -v subfinder || echo 'нет')"
 echo "    amass:     $(command -v amass || echo 'нет')"
+echo "    masscan:   $(command -v masscan || echo 'нет')"
+echo "    nikto:     $(command -v nikto || echo 'нет')"
+echo "    nmap:      $(command -v nmap || echo 'нет')"
+echo "    sslscan:   $(command -v sslscan || echo 'нет')"
 echo ""
 echo "[+] Запуск N3XUS..."
 echo ""
