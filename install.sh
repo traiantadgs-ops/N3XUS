@@ -79,6 +79,9 @@ echo "[*] Скачивание N3XUS.py..."
 cd ~
 curl -fsSL -o N3XUS.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/N3XUS.py
 
+echo "[*] Скачивание n3xus-dos.py..."
+curl -fsSL -o n3xus-dos.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/n3xus-dos.py
+
 echo ""
 echo "[+] Установка завершена!"
 echo "[+] Проверка инструментов:"
