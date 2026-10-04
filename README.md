@@ -2,7 +2,7 @@
 
 Инструмент для пентеста в Termux. Написан на Python, работает прямо с телефона.
 
-**TG GROUP:** [SlientKhanTrollers]
+**TG GROUP:** `SlientKhanTrollers`
 
 ## Возможности
 
