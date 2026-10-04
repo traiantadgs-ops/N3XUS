@@ -1546,7 +1546,7 @@ def main(stdscr):
                           curses.color_pair(15) | curses.A_DIM)
             stdscr.addstr(len(LOGO) + 2, 15, "[ N3XUS v2.0 by TR0JAN ]",
                           curses.color_pair(15) | curses.A_BOLD)
-            stdscr.addstr(len(LOGO) + 3, 15, "  [ TG GROUP: SKT-M0R0NS ]",
+            stdscr.addstr(len(LOGO) + 3, 15, "  [ TG GROUP: SlientKhanTrollers ]",
                           curses.color_pair(rainbow_color()) | curses.A_BOLD)
             stdscr.addstr(len(LOGO) + 4, 0, "═" * 60, curses.color_pair(15))
         except curses.error:
