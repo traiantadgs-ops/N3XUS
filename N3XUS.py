@@ -1514,7 +1514,6 @@ def main(stdscr):
     curses.init_pair(19, curses.COLOR_RED, -1)
     stdscr.nodelay(True)
     stdscr.timeout(30)
-    intro_animation(stdscr)
     server_started = False
     state = "menu"
     waiting_input = ""
@@ -2413,31 +2412,6 @@ def main(stdscr):
                 fullscan_user_input += chr(ch)
         
         
-def intro_animation(stdscr):
-    """Intro: warhead drop, explosion, mushroom cloud, ready."""
-    frames = [
-        ["", "         /\\", "        /  \\", "       |    |", "       |    |", "       |____|"],
-        ["", "       ____", "      /    \\", "     |      |", "     |      |", "     |______|", "    /|      |\\", "   /_|______|_\\"],
-        ["", "     _____", "    /     \\", "   |       |", "    \\_____/", "    /|   |\\", "   /_|___|_\\"],
-        ["", "   * * *", "  * * * * *", " * * * * * *", "  * * * * *", "   * * *"],
-        ["", "     .--------.", "   .'   💥     '.", "  /  [DETONATION]  \\", "   '.         .'", "     '--------'", "  ~~~~~~~~~~~~~~~"],
-        ["", "       .------------.", "     .'  0101010101  '.", "    /  109876543210  \\", "   |   876543210987   |", "    \\  0101010101  /", "     '.          .'", "       '--------'"],
-        ["", "     .-------------------.", "  .-'                     '-.", " .'   0101010101010101010  '.", " /  1098765432109876543210  \\", "|  8765432109876543210987653 |", " \\  0101010101010101010101  /", "  '.     _--_-----_--_     .'", "    '---'    |     |    '---'", "             | 01  |", "             | 10  |", "             | 01  |", "          .-'       '-.", "        .'  [ YIELD ]  '.", "       /                 \\", "      /___________________\\"],
-        ["", "            . ~ ~ ~ ~ ~ .", "          .               .", "         ~   [ SMOKE ]     ~", "          .               .", "            . ~ ~ ~ ~ ~ .", ""],
-        ["", "         =============================", "         |    N3XUS v2.1 // READY    |", "         |    INITIALIZING SYSTEM... |", "         =============================", ""],
-    ]
-
-    for frame in frames:
-        stdscr.clear()
-        for i, line in enumerate(frame):
-            try:
-                stdscr.addstr(i + 2, 4, line,
-                              curses.color_pair(15) | curses.A_BOLD)
-            except curses.error:
-                pass
-        stdscr.refresh()
-        time.sleep(0.35)
-
     time.sleep(1)
 if __name__ == "__main__":
     check_and_install()
