@@ -75,9 +75,9 @@ if ! grep -q 'go/bin' ~/.bashrc 2>/dev/null; then
 fi
 export PATH=$PATH:$HOME/go/bin
 
-echo "[*] Downloading N3XUS_en.py..."
+echo "[*] Downloading N3XUS.py..."
 cd ~
-curl -fsSL -o N3XUS_en.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/N3XUS.py
+curl -fsSL -o N3XUS.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/N3XUS.py
 
 echo "[*] Downloading web_attacks.py..."
 curl -fsSL -o web_attacks.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/web_attacks.py
@@ -99,4 +99,4 @@ echo "[+] Starting N3XUS..."
 echo ""
 sleep 2
 
-python ~/N3XUS_en.py
+python ~/N3XUS.py
