@@ -2,29 +2,29 @@
 set -e
 
 echo "════════════════════════════════════════════════════════════"
-echo "  N3XUS v2.1 — установщик"
+echo "  N3XUS v2.1 — installer"
 echo "  TG GROUP: SlientKhanTrollers"
 echo "════════════════════════════════════════════════════════════"
 echo ""
-echo "[!] ДИСКЛЕЙМЕР:"
-echo "    Автор не несёт ответственности за использование софта."
-echo "    Используй только на своей инфраструктуре или с разрешения."
+echo "[!] DISCLAIMER:"
+echo "    The author is not responsible for the use of this software."
+echo "    Use it only on your own infrastructure or with permission."
 echo ""
 sleep 3
 
-echo "[*] Обновление пакетов..."
+echo "[*] Updating packages..."
 pkg update -y && pkg upgrade -y
 
-echo "[*] Установка базовых зависимостей..."
+echo "[*] Installing base dependencies..."
 pkg install python git curl nmap sslscan termux-api clang make -y
 
-echo "[*] Установка Go (для subfinder и amass)..."
+echo "[*] Installing Go (for subfinder and amass)..."
 pkg install golang -y
 
-echo "[*] Установка Flask..."
+echo "[*] Installing Flask..."
 pip install --break-system-packages flask 2>/dev/null || pkg install python-flask -y
 
-echo "[*] Установка nikto..."
+echo "[*] Installing nikto..."
 if ! command -v nikto >/dev/null 2>&1; then
     pkg install perl -y
     cd ~
@@ -33,17 +33,17 @@ if ! command -v nikto >/dev/null 2>&1; then
     chmod +x ~/nikto/program/nikto.pl
 fi
 
-echo "[*] Установка testssl.sh..."
+echo "[*] Installing testssl.sh..."
 if [ ! -f ~/testssl.sh/testssl.sh ]; then
     cd ~
     git clone https://github.com/drwetter/testssl.sh.git 2>/dev/null || true
     chmod +x ~/testssl.sh/testssl.sh
 fi
 
-echo "[*] Установка cloudflared..."
+echo "[*] Installing cloudflared..."
 pkg install cloudflared -y 2>/dev/null || true
 
-echo "[*] Установка masscan (сборка из исходников)..."
+echo "[*] Installing masscan (building from source)..."
 if ! command -v masscan >/dev/null 2>&1; then
     cd ~
     if [ ! -d ~/masscan ]; then
@@ -59,44 +59,44 @@ if ! command -v masscan >/dev/null 2>&1; then
     fi
 fi
 
-echo "[*] Установка subfinder..."
+echo "[*] Installing subfinder..."
 if ! command -v subfinder >/dev/null 2>&1; then
     go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 fi
 
-echo "[*] Установка amass..."
+echo "[*] Installing amass..."
 if ! command -v amass >/dev/null 2>&1; then
     go install -v github.com/owasp-amass/amass/v4/...@latest
 fi
 
-echo "[*] Настройка PATH для Go-бинарников..."
+echo "[*] Setting up PATH for Go binaries..."
 if ! grep -q 'go/bin' ~/.bashrc 2>/dev/null; then
     echo 'export PATH=$PATH:$HOME/go/bin' >> ~/.bashrc
 fi
 export PATH=$PATH:$HOME/go/bin
 
-echo "[*] Скачивание N3XUS.py..."
+echo "[*] Downloading N3XUS_en.py..."
 cd ~
-curl -fsSL -o N3XUS.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/N3XUS.py
+curl -fsSL -o N3XUS_en.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/N3XUS_en.py
 
-echo "[*] Скачивание web_attacks.py..."
+echo "[*] Downloading web_attacks.py..."
 curl -fsSL -o web_attacks.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/web_attacks.py
 
-echo "[*] Скачивание n3xus-dos.py..."
+echo "[*] Downloading n3xus-dos.py..."
 curl -fsSL -o n3xus-dos.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/n3xus-dos.py
 
 echo ""
-echo "[+] Установка завершена!"
-echo "[+] Проверка инструментов:"
-echo "    subfinder: $(command -v subfinder || echo 'нет')"
-echo "    amass:     $(command -v amass || echo 'нет')"
-echo "    masscan:   $(command -v masscan || echo 'нет')"
-echo "    nikto:     $(command -v nikto || echo 'нет')"
-echo "    nmap:      $(command -v nmap || echo 'нет')"
-echo "    sslscan:   $(command -v sslscan || echo 'нет')"
+echo "[+] Installation complete!"
+echo "[+] Tool check:"
+echo "    subfinder: $(command -v subfinder || echo 'not found')"
+echo "    amass:     $(command -v amass || echo 'not found')"
+echo "    masscan:   $(command -v masscan || echo 'not found')"
+echo "    nikto:     $(command -v nikto || echo 'not found')"
+echo "    nmap:      $(command -v nmap || echo 'not found')"
+echo "    sslscan:   $(command -v sslscan || echo 'not found')"
 echo ""
-echo "[+] Запуск N3XUS..."
+echo "[+] Starting N3XUS..."
 echo ""
 sleep 2
 
-python ~/N3XUS.py
+python ~/N3XUS_en.py
