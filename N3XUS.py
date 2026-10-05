@@ -1568,9 +1568,9 @@ def main(stdscr):
                               curses.color_pair(15))
                 stdscr.addstr(len(LOGO) + 11, 4, "[7] FULL SCAN WEBSITES (scans the site for all vulnerabilities)",
                               curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 13, 4, "[9] D0S",
+                stdscr.addstr(len(LOGO) + 12, 4, "[9] D0S",
                               curses.color_pair(13) | curses.A_BOLD)
-                stdscr.addstr(len(LOGO) + 12, 4, "[0] exit",
+                stdscr.addstr(len(LOGO) + 13, 4, "[0] exit",
                               curses.color_pair(15))
                 stdscr.addstr(len(LOGO) + 14, 4, "Select an item: " + user_input,
                               curses.color_pair(15))
