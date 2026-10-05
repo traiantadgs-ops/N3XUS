@@ -15,9 +15,6 @@
   - Проверка живых через curl с кодом ответа
   - Разделение на живые и мёртвые
   - Сканирование найденных на уязвимости
-  - Асинхронный поток — интерфейс не фризит
-  - Спиннер и счётчик времени
-  - Отмена по `0 + Enter`
 - **[4] MASSCAN** — сканирование портов через **masscan** + **nmap -sV**:
   - masscan по всем 65535 портам (быстрее nmap в ~20 раз)
   - Автоматический fallback на `nmap -p-`, если masscan не сработал
@@ -52,20 +49,29 @@
   - Certificate deep
   - Cookie prefixes
   - Wayback / robots analysis
+- **[8] WEB ATTACKS** — модуль веб-атак:
+  - SQL Injection Scanner (Auto)
+  - SQLMap Integration
+  - XSS Detection (Reflected/Stored)
+  - LFI/RFI Scanner
+  - Command Injection Tester
+  - SSRF Detection
+  - Open Redirect Finder
+  - CORS Misconfiguration
+  - HTTP Header Analysis
+  - WAF Detection & Bypass
+  - Full Web Scan (All)
 - **[9] D0S** — нагрузочный тест (HTTP Flood + Slowloris):
   - Проверка состояния телефона (батарея, память, Wi-Fi)
   - Режимы: FULL POWER / SAFE MODE / LOW POWER / BLOCKED
   - Категории целей: Website / Wi-Fi Router / Direct IP
-  - Ввод цели вручную
-  - Подтверждение `y/n` перед атакой
-  - Статистика в реальном времени (запросы, ошибки, RPS)
+  - Статистика в реальном времени
   - Лог в `~/n3xus-dos.log`
-  - Работает ТОЛЬКО на своих целях
 
 ## Установка
 
 Одна команда в Termux:
 
 ```
-bash <(curl -sSL https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/install.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/ТВОЙ_НИК/ТВОЙ_РЕПО/main/install.sh)
 ```
