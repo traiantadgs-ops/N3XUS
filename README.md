@@ -1,30 +1,30 @@
 # N3XUS v2.1 by TR0JAN
 
-Инструмент для пентеста в Termux. Написан на Python, работает прямо с телефона.
+Pentest tool for Termux. Written in Python, runs directly from your phone.
 
 **TG GROUP:** `SlientKhanTrollers`
 
-## Возможности
+## Features
 
-- **[1] 1P L0GG3R** — ловит IP, страну, город и провайдера через Cloudflare Tunnel
-- **[2] С4ЙТ СК4НН3Р** — сканирует сайт на уязвимости (Nikto, curl, заголовки)
-- **[3] D33R — SUBD0M41N D33P** — глубокий поиск поддоменов:
-  - Subfinder — быстрый пассивный сбор
-  - Amass — глубокий пассивный сбор
-  - crt.sh — сертификаты (резерв)
-  - Проверка живых через curl с кодом ответа
-  - Разделение на живые и мёртвые
-  - Сканирование найденных на уязвимости
-- **[4] MASSCAN** — сканирование портов через **masscan** + **nmap -sV**:
-  - masscan по всем 65535 портам (быстрее nmap в ~20 раз)
-  - Автоматический fallback на `nmap -p-`, если masscan не сработал
-  - Определение версий сервисов через `nmap -sV`
-  - Команды подключения к каждому порту
-- **[5] SSL CH3CK** — проверка SSL/TLS (sslscan, testssl.sh)
-- **[6] D1R3CT0RY BRUT3** — поиск скрытых файлов и админок
-- **[7] FULL SC4N W3BS1T3S** — полный скан сайта:
-  - Заголовки безопасности (HSTS, CSP, X-Frame-Options)
-  - Cookie-флаги (Secure, HttpOnly, SameSite)
+- **[1] 1P L0GG3R** — captures IP, country, city and ISP via Cloudflare Tunnel
+- **[2] S1TE SC4NN3R** — scans a site for vulnerabilities (Nikto, curl, headers)
+- **[3] D33R — SUBD0M41N D33P** — deep subdomain enumeration:
+  - Subfinder — fast passive enumeration
+  - Amass — deep passive enumeration
+  - crt.sh — certificates (fallback)
+  - Live host check via curl with response codes
+  - Separation into live and dead hosts
+  - Vulnerability scan on discovered hosts
+- **[4] MASSCAN** — port scanning via **masscan** + **nmap -sV**:
+  - masscan across all 65535 ports (~20x faster than nmap)
+  - Automatic fallback to `nmap -p-` if masscan fails
+  - Service version detection via `nmap -sV`
+  - Connection commands for each port
+- **[5] SSL CH3CK** — SSL/TLS check (sslscan, testssl.sh)
+- **[6] D1R3CT0RY BRUT3** — search for hidden files and admin panels
+- **[7] FULL SC4N W3BS1T3S** — full site scan:
+  - Security headers (HSTS, CSP, X-Frame-Options)
+  - Cookie flags (Secure, HttpOnly, SameSite)
   - CORS misconfig
   - Open Redirect
   - Path Traversal
@@ -32,8 +32,8 @@
   - SQL Injection
   - CRLF Injection
   - robots.txt / sitemap.xml / security.txt
-  - Открытые порты
-  - Скрытые файлы и админки
+  - Open ports
+  - Hidden files and admin panels
   - WAF Detection
   - CMS Detection
   - HTTP Methods (PUT, DELETE, TRACE)
@@ -49,7 +49,7 @@
   - Certificate deep
   - Cookie prefixes
   - Wayback / robots analysis
-- **[8] WEB ATTACKS** — модуль веб-атак:
+- **[8] WEB ATTACKS** — web attack module:
   - SQL Injection Scanner (Auto)
   - SQLMap Integration
   - XSS Detection (Reflected/Stored)
@@ -61,17 +61,17 @@
   - HTTP Header Analysis
   - WAF Detection & Bypass
   - Full Web Scan (All)
-- **[9] D0S** — нагрузочный тест (HTTP Flood + Slowloris):
-  - Проверка состояния телефона (батарея, память, Wi-Fi)
-  - Режимы: FULL POWER / SAFE MODE / LOW POWER / BLOCKED
-  - Категории целей: Website / Wi-Fi Router / Direct IP
-  - Статистика в реальном времени
-  - Лог в `~/n3xus-dos.log`
+- **[9] D0S** — stress test (HTTP Flood + Slowloris):
+  - Phone state check (battery, memory, Wi-Fi)
+  - Modes: FULL POWER / SAFE MODE / LOW POWER / BLOCKED
+  - Target categories: Website / Wi-Fi Router / Direct IP
+  - Real-time statistics
+  - Log in `~/n3xus-dos.log`
 
-## Установка
+## Installation
 
-Одна команда в Termux:
+One command in Termux:
 
 ```
-bash <(curl -sSL https://raw.githubusercontent.com/ТВОЙ_НИК/ТВОЙ_РЕПО/main/install.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/install.sh)
 ```
