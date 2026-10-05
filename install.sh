@@ -77,7 +77,7 @@ export PATH=$PATH:$HOME/go/bin
 
 echo "[*] Downloading N3XUS_en.py..."
 cd ~
-curl -fsSL -o N3XUS_en.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/N3XUS_en.py
+curl -fsSL -o N3XUS_en.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/N3XUS.py
 
 echo "[*] Downloading web_attacks.py..."
 curl -fsSL -o web_attacks.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/web_attacks.py
