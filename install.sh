@@ -77,13 +77,13 @@ export PATH=$PATH:$HOME/go/bin
 
 echo "[*] Скачивание N3XUS.py..."
 cd ~
-curl -fsSL -o N3XUS.py https://raw.githubusercontent.com/ТВОЙ_НИК/ТВОЙ_РЕПО/main/N3XUS.py
+curl -fsSL -o N3XUS.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/N3XUS.py
 
 echo "[*] Скачивание web_attacks.py..."
-curl -fsSL -o web_attacks.py https://raw.githubusercontent.com/ТВОЙ_НИК/ТВОЙ_РЕПО/main/web_attacks.py
+curl -fsSL -o web_attacks.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/web_attacks.py
 
 echo "[*] Скачивание n3xus-dos.py..."
-curl -fsSL -o n3xus-dos.py https://raw.githubusercontent.com/ТВОЙ_НИК/ТВОЙ_РЕПО/main/n3xus-dos.py
+curl -fsSL -o n3xus-dos.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/n3xus-dos.py
 
 echo ""
 echo "[+] Установка завершена!"
