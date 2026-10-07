@@ -2,7 +2,7 @@
 set -e
 
 echo "════════════════════════════════════════════════════════════"
-echo "  N3XUS v2.1 — installer"
+echo "  N3XUS v2.2 — installer"
 echo "  TG GROUP: SlientKhanTrollers"
 echo "════════════════════════════════════════════════════════════"
 echo ""
@@ -81,6 +81,9 @@ curl -fsSL -o N3XUS.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/m
 
 echo "[*] Downloading web_attacks.py..."
 curl -fsSL -o web_attacks.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/web_attacks.py
+
+echo "[*] Downloading network_attack_n3xus.py..."
+curl -fsSL -o network_attack_n3xus.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/network_attack_n3xus.py
 
 echo "[*] Downloading n3xus-dos.py..."
 curl -fsSL -o n3xus-dos.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/n3xus-dos.py
