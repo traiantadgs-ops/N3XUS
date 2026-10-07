@@ -1575,11 +1575,11 @@ def main(stdscr):
                               curses.color_pair(13) | curses.A_BOLD)
                 stdscr.addstr(len(LOGO) + 14, 4, "[10] NETWORK ATTACKS",
                               curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 14, 4, "[0] exit",
+                stdscr.addstr(len(LOGO) + 15, 4, "[0] exit",
                               curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 15, 4, "Select an item: " + user_input,
+                stdscr.addstr(len(LOGO) + 16, 4, "Select an item: " + user_input,
                               curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 17, 4,
+                stdscr.addstr(len(LOGO) + 18, 4,
                               "[!] The author is not responsible for use.",
                               curses.color_pair(15) | curses.A_DIM)
             except curses.error:
