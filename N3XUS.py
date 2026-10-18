@@ -1555,13 +1555,13 @@ def main(stdscr):
 
         if state == "menu":
             try:
-                stdscr.addstr(len(LOGO) + 5, 4, "[1] IP LOGGER (works perfectly)",
+                stdscr.addstr(len(LOGO) + 5, 4, "[1] IP LOGGER           (works perfectly)",
                               curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 6, 4, "[2] SITE SCANNER (scans the site for vulnerabilities, etc.)",
+                stdscr.addstr(len(LOGO) + 6, 4, "[2] SITE SCANNER        (scans the site for vulnerabilities, etc.)",
                               curses.color_pair(15))
                 stdscr.addstr(len(LOGO) + 7, 4, "[3] SUBD0MAIN DEER",
                               curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 8, 4, "[4] MASSCAN (This is nmap, but 20 times faster)",
+                stdscr.addstr(len(LOGO) + 8, 4, "[4] MASSCAN             (This is nmap, but 20 times faster)",
                               curses.color_pair(15))
                 stdscr.addstr(len(LOGO) + 9, 4, "[5] SSL CHECK",
                               curses.color_pair(15))
@@ -1569,11 +1569,11 @@ def main(stdscr):
                               curses.color_pair(15))
                 stdscr.addstr(len(LOGO) + 11, 4, "[7] FULL SCAN WEBSITES (scans the site for all vulnerabilities)",
                               curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 12, 4, "[8] WEB ATTACKS (SQLi, XSS, LFI, CMDi, SSRF)",
+                stdscr.addstr(len(LOGO) + 12, 4, "[8] WEB ATTACKS        (SQLi, XSS, LFI, CMDi, SSRF)",
                               curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 13, 4, "[9] D0S (in beta version)",
+                stdscr.addstr(len(LOGO) + 13, 4, "[9] D0S                (in beta version)",
                               curses.color_pair(13) | curses.A_BOLD)
-                stdscr.addstr(len(LOGO) + 14, 4, "[10] NETWORK ATTACKS",
+                stdscr.addstr(len(LOGO) + 14, 4, "[10] NETWORK ATTACKS (module for betwork atack)",
                               curses.color_pair(15))
                 stdscr.addstr(len(LOGO) + 15, 4, "[0] exit",
                               curses.color_pair(15))
