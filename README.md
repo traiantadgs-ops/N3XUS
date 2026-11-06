@@ -2,7 +2,7 @@
 
 Mobile penetration testing framework for Termux. Written in Python, runs directly from your phone.
 
-**TG GROUP:** `SlientKhanTrollers`
+**TG GROUP:** `The Hollow Team`
 
 ---
 
