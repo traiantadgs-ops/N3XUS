@@ -3,7 +3,7 @@ set -e
 
 echo "════════════════════════════════════════════════════════════"
 echo "  N3XUS v2.2 — installer"
-echo "  TG GROUP: SlientKhanTrollers"
+echo "  TG GROUP: The Hollow Team"
 echo "════════════════════════════════════════════════════════════"
 echo ""
 echo "[!] DISCLAIMER:"
