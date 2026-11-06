@@ -10,10 +10,10 @@ echo "[!] DISCLAIMER:"
 echo "    The author is not responsible for the use of this software."
 echo "    Use it only on your own infrastructure or with permission."
 echo ""
-sleep 3
+sleep 2
 
 echo "[*] Updating packages..."
-pkg update -y && pkg upgrade -y
+pkg update -y && pkg upgrade -y || true
 
 echo "[*] Installing base dependencies..."
 pkg install python git curl nmap sslscan termux-api clang make -y
@@ -22,21 +22,27 @@ echo "[*] Installing Go (for subfinder and amass)..."
 pkg install golang -y
 
 echo "[*] Installing Flask..."
-pip install --break-system-packages flask 2>/dev/null || pkg install python-flask -y
+pip install --break-system-packages flask 2>/dev/null || pkg install python-flask -y || true
 
 echo "[*] Installing nikto..."
 if ! command -v nikto >/dev/null 2>&1; then
     pkg install perl -y
     cd ~
-    git clone https://github.com/sullo/nikto.git 2>/dev/null || true
-    ln -sf ~/nikto/program/nikto.pl $PREFIX/bin/nikto
-    chmod +x ~/nikto/program/nikto.pl
+    if [ ! -d ~/nikto ]; then
+        git clone https://github.com/sullo/nikto.git 2>/dev/null || true
+    fi
+    if [ -f ~/nikto/program/nikto.pl ]; then
+        ln -sf ~/nikto/program/nikto.pl $PREFIX/bin/nikto
+        chmod +x ~/nikto/program/nikto.pl
+    fi
 fi
 
 echo "[*] Installing testssl.sh..."
-if [ ! -f ~/testssl.sh/testssl.sh ]; then
-    cd ~
+cd ~
+if [ ! -d ~/testssl.sh ]; then
     git clone https://github.com/drwetter/testssl.sh.git 2>/dev/null || true
+fi
+if [ -f ~/testssl.sh/testssl.sh ]; then
     chmod +x ~/testssl.sh/testssl.sh
 fi
 
@@ -61,12 +67,12 @@ fi
 
 echo "[*] Installing subfinder..."
 if ! command -v subfinder >/dev/null 2>&1; then
-    go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+    go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest || true
 fi
 
 echo "[*] Installing amass..."
 if ! command -v amass >/dev/null 2>&1; then
-    go install -v github.com/owasp-amass/amass/v4/...@latest
+    go install -v github.com/owasp-amass/amass/v4/...@latest || true
 fi
 
 echo "[*] Setting up PATH for Go binaries..."
@@ -75,18 +81,12 @@ if ! grep -q 'go/bin' ~/.bashrc 2>/dev/null; then
 fi
 export PATH=$PATH:$HOME/go/bin
 
-echo "[*] Downloading N3XUS.py..."
+echo "[*] Downloading N3XUS files..."
 cd ~
-curl -fsSL -o N3XUS.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/N3XUS.py
-
-echo "[*] Downloading web_attacks.py..."
-curl -fsSL -o web_attacks.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/web_attacks.py
-
-echo "[*] Downloading network_attack_n3xus.py..."
-curl -fsSL -o network_attack_n3xus.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/network_attack_n3xus.py
-
-echo "[*] Downloading n3xus-dos.py..."
-curl -fsSL -o n3xus-dos.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/n3xus-dos.py
+curl -fsSL -o N3XUS.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/N3XUS.py || true
+curl -fsSL -o web_attacks.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/web_attacks.py || true
+curl -fsSL -o network_attack_n3xus.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/network_attack_n3xus.py || true
+curl -fsSL -o n3xus-dos.py https://raw.githubusercontent.com/traiantadgs-ops/N3XUS/main/n3xus-dos.py || true
 
 echo ""
 echo "[+] Installation complete!"
@@ -102,4 +102,8 @@ echo "[+] Starting N3XUS..."
 echo ""
 sleep 2
 
-python ~/N3XUS.py
+if [ -f ~/N3XUS.py ]; then
+    python3 ~/N3XUS.py
+else
+    echo "[!] N3XUS.py not found in home directory."
+fi
