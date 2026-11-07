@@ -42,8 +42,11 @@ cd ~
 if [ ! -d ~/testssl.sh ]; then
     git clone https://github.com/drwetter/testssl.sh.git 2>/dev/null || true
 fi
+
 if [ -f ~/testssl.sh/testssl.sh ]; then
     chmod +x ~/testssl.sh/testssl.sh
+else
+    echo "[!] testssl.sh download failed. Please run: pkg install testssl.sh"
 fi
 
 echo "[*] Installing cloudflared..."
@@ -97,6 +100,7 @@ echo "    masscan:   $(command -v masscan || echo 'not found')"
 echo "    nikto:     $(command -v nikto || echo 'not found')"
 echo "    nmap:      $(command -v nmap || echo 'not found')"
 echo "    sslscan:   $(command -v sslscan || echo 'not found')"
+echo "    testssl:   $( [ -f ~/testssl.sh/testssl.sh ] && echo 'installed' || echo 'not found' )"
 echo ""
 echo "[+] Starting N3XUS..."
 echo ""
