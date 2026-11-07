@@ -1667,13 +1667,15 @@ def main(stdscr):
             except curses.error: pass
         elif state == "caught":
             try:
-                stdscr.addstr(len(LOGO) + 5, 4, "[+] VICTIM CAPTURED!", curses.color_pair(12) | curses.A_BOLD)
+                stdscr.addstr(len(LOGO) + 5, 4, "[+] REQUEST ANALYTICS CAPTURED!", curses.color_pair(12) | curses.A_BOLD)
                 stdscr.addstr(len(LOGO) + 7, 4, "IP: " + str(captured_ip), curses.color_pair(15) | curses.A_BOLD)
-                stdscr.addstr(len(LOGO) + 8, 4, "Country: " + str(captured_country), curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 9, 4, "City: " + str(captured_city), curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 10, 4, "Provider: " + str(captured_isp), curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 11, 4, "Time: " + str(captured_time), curses.color_pair(15))
-                stdscr.addstr(len(LOGO) + 13, 4, "0 + Enter — back", curses.color_pair(15) | curses.A_DIM)
+                stdscr.addstr(len(LOGO) + 8, 4, f"Location: {captured_country}, {captured_city}", curses.color_pair(15))
+                stdscr.addstr(len(LOGO) + 9, 4, f"ISP: {captured_isp} (AS: {captured_as})", curses.color_pair(15))
+                stdscr.addstr(len(LOGO) + 10, 4, f"Proxy/VPN: {captured_proxy}", curses.color_pair(15))
+                stdscr.addstr(len(LOGO) + 11, 4, f"Display: {captured_screen}", curses.color_pair(15))
+                stdscr.addstr(len(LOGO) + 12, 4, f"Lang / TZ: {captured_lang} / {captured_tz}", curses.color_pair(15))
+                stdscr.addstr(len(LOGO) + 13, 4, f"Referrer: {captured_ref}", curses.color_pair(15))
+                stdscr.addstr(len(LOGO) + 15, 4, "0 + Enter — back", curses.color_pair(15) | curses.A_DIM)
             except curses.error: pass
         elif state == "site_input":
             try:
